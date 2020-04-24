@@ -50,10 +50,25 @@ Mappings:
       ImageId: 'ami-0edf3b95e26a682df'
 
 Parameters: 
+  Anonymous:
+    Description: Folding@home fold anonymously (default true for anonymous)
+    Type: String
+    Default: 'true'
+    AllowedValues:
+      - 'true'
+      - 'false'
   FoldingAtHomeTeam:
     Description: Folding@home team number (default 0 for no team)
     Type: Number
     Default: 0
+  FoldingAtHomeUser:
+    Description: Folding@home user name (default Anonymous for anonymous user)
+    Type: String
+    Default: 'Anonymous'
+  FoldingAtHomePasskey:
+    Description: Folding@home pass key (default empty for anonymous user)
+    Type: String
+    Default: ''
   InstanceCount:
     Description: Scale-out count of g4dn.xlarge instances to run the Folding@home client
     Type: Number
@@ -142,10 +157,10 @@ Resources:
             mkdir /etc/fahclient
             cat<<END >/etc/fahclient/config.xml
             <config>
-              <fold-anon v="true"/>
-              <user v="Anonymous"/>
+              <fold-anon v="${Anonymous}"/>
+              <user v="${FoldingAtHomeUser}"/>
               <team v="${FoldingAtHomeTeam}"/>
-              <passkey v=""/>
+              <passkey v="${FoldingAtHomePasskey}"/>
               <power v="full"/>
               <gpu v="true"/>
               <slot id="0" type="CPU"/>
@@ -153,6 +168,9 @@ Resources:
               <allow>127.0.0.1</allow>
               <web-allow>127.0.0.1</web-allow>
             </config>
+            END
+            cat<<END >/var/lib/fahclient/GPUs.txt
+            0x10de:0x1eb8:2:7:TU104GL [Tesla T4]
             END
             cat<<END >/usr/local/bin/asg-unhealthy
             #!/bin/bash

@@ -25,15 +25,18 @@ WIP Please check whether the solution works for you.
 
 Create stack using the template S3 URL: `https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml`
 
-| Parameter            | Description                                                                                                 |
-|----------------------|-------------------------------------------------------------------------------------------------------------|
-| `FoldingAtHomeTeam`  | Folding@home team number (default 0 for no team)                                                            |
-| `InstanceCount`      | Scale-out count of `g4dn.xlarge` instances to run the Folding@home client                                   |
-| `KeyName`            | SSH [key name](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) for `ubuntu` user    |
-| `Subnets`            | Subnets in VPC (for example the default VPC subnets `172.31.0.0/20`, `172.31.16.0/20` and `172.31.32.0/20`) |
-| `VpcId`              | VPC for the stack (for example the default VPC `172.31.0.0/16`)                                             |
+| Parameter              | Description                                                                                                 |
+|------------------------|-------------------------------------------------------------------------------------------------------------|
+| `Anonymous`            | Folding@home fold anonymously (default true for anonymous)                                                  |
+| `FoldingAtHomePasskey` | Folding@home pass key (leave empty for anonymous user)                                                      |
+| `FoldingAtHomeTeam`    | Folding@home team number (default 0 for no team)                                                            |
+| `FoldingAtHomeUser`    | Folding@home user name (default Anonymous for anonymous)                                                    |
+| `InstanceCount`        | Scale-out count of `g4dn.xlarge` instances to run the Folding@home client                                   |
+| `KeyName`              | SSH [key name](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) for `ubuntu` user    |
+| `Subnets`              | Subnets in VPC (for example the default VPC subnets `172.31.0.0/20`, `172.31.16.0/20` and `172.31.32.0/20`) |
+| `VpcId`                | VPC for the stack (for example the default VPC `172.31.0.0/16`)                                             |
 
-Cost of spot instances may vary by availability zone. Use subnets across different availability zones to give lower cost.
+Cost of spot instances may vary by availability zone. Auto scaling group may launch instances in higher cost AZs.
 
 | Region         | Create Stack              |
 |----------------|---------------------------|
@@ -58,15 +61,13 @@ Cost of spot instances may vary by availability zone. Use subnets across differe
 
 ### Launch from CLI
 
-Replace `KeyName`, `Subnets` and `VpcId` values:
+To launch one instance with anonymous folding, replace the `KeyName`, `Subnets` and `VpcId` values with your SSH key name and default VPC network parameters:
 
 ```sh
 aws cloudformation create-stack \
   --stack-name FoldingAtHome \
   --template-url https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml \
   --parameters \
-    ParameterKey="FoldingAtHomeTeam",ParameterValue="0" \
-    ParameterKey="InstanceCount",ParameterValue="1" \
     ParameterKey="KeyName",ParameterValue="mykeyname" \
     ParameterKey="Subnets",ParameterValue="subnet-12345678\,subnet-56781234" \
     ParameterKey="VpcId",ParameterValue="vpc-abcdefgh" \
@@ -91,6 +92,10 @@ Show status of the service with `systemctl status FAHClient` .
 
 ## Release History
 
+* 20.4.23+1
+    * Prepopulate GPUs.txt to remove the need for restart 
+* 20.4.23
+    * Added Folding@home user name and team as optional parameters 
 * 20.4.19
     * Updated client to 7.6.9
 * 20.3.21
