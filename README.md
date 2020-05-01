@@ -1,6 +1,8 @@
 # cfn-foldingathome
 > CloudFormation template for Folding@home on AWS spot instances.
 
+![Lint CloudFormation Templates](https://github.com/jkataja/cfn-foldingathome/workflows/Lint%20CloudFormation%20Templates/badge.svg)
+
 This template creates an AWS spot instance fleet for running the [Folding@Home](https://foldingathome.org/) client.
 Folding@home is a computing platform to assist disease research, for instance to find a cure for the COVID-19 virus.
 The template uses G4-type instances with NVIDIA TESLA GPUs.
@@ -33,6 +35,7 @@ Create stack using the template S3 URL: `https://cfn-foldingathome.s3.amazonaws.
 | `FoldingAtHomeUser`    | Folding@home user name (default Anonymous for anonymous)                                                    |
 | `InstanceCount`        | Scale-out count of `g4dn.xlarge` instances to run the Folding@home client                                   |
 | `KeyName`              | SSH [key name](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) for `ubuntu` user    |
+| `SSHLocation`          | Network allowed to SSH to instances in public subnet (default 0.0.0.0/0 to allow from everywhere)           |
 | `Subnets`              | Subnets in VPC (for example the default VPC subnets `172.31.0.0/20`, `172.31.16.0/20` and `172.31.32.0/20`) |
 | `VpcId`                | VPC for the stack (for example the default VPC `172.31.0.0/16`)                                             |
 
@@ -44,6 +47,7 @@ Cost of spot instances may vary by availability zone. Auto scaling group may lau
 | US East (Ohio) `us-east-2` | [Launch Stack](https://us-east-2.console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/create/review?templateURL=https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml&stackName=FoldingAtHome) |
 | US West (N. California) `us-west-1`| [Launch Stack](https://us-west-1.console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?templateURL=https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml&stackName=FoldingAtHome) |
 |US West (Oregon) `us-west-2` | [Launch Stack](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml&stackName=FoldingAtHome) |
+| Africa (Cape Town) `af-south-1`| [Launch Stack](https://af-south-1.console.aws.amazon.com/cloudformation/home?region=af-south-1#/stacks/create/review?templateURL=https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml&stackName=FoldingAtHome) |
 | Asia Pacific (Hong Kong) `ap-east-1`| [Launch Stack](https://ap-east-1.console.aws.amazon.com/cloudformation/home?region=ap-east-1#/stacks/create/review?templateURL=https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml&stackName=FoldingAtHome) |
 | Asia Pacific (Mumbai) `ap-south-1` | [Launch Stack](https://ap-south-1.console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/create/review?templateURL=https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml&stackName=FoldingAtHome) |
 | Asia Pacific (Seoul) `ap-northeast-2`| [Launch Stack](https://ap-northeast-2.console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/create/review?templateURL=https://cfn-foldingathome.s3.amazonaws.com/foldingathome.yml&stackName=FoldingAtHome) |
@@ -88,10 +92,15 @@ Now access the Web UI from: http://localhost:7396/
 
 Folding@home configuration is output to`/etc/fahclient/config.xml` .
 Folding progress log output is written to `/var/lib/fahclient/log.txt`.
-Show status of the service with `systemctl status FAHClient` .
+Show status of the service with `systemctl status fahclient` .
 
 ## Release History
 
+* 20.4.26
+    * Added `SSHLocation` parameter to limit SSH access (thanks [FireballDWF](https://github.com/FireballDWF)!)
+* 20.4.25
+    * Updated base Ubuntu AMI image
+    * Added launch link for Africa (Cape Town) region
 * 20.4.23+1
     * Prepopulate GPUs.txt to remove the need for restart 
 * 20.4.23
