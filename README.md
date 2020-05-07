@@ -1,18 +1,18 @@
 # cfn-foldingathome
 > CloudFormation template for Folding@home on AWS spot instances.
 
-![Lint CloudFormation Templates](https://github.com/jkataja/cfn-foldingathome/workflows/Lint%20CloudFormation%20Templates/badge.svg)
+![Lint CloudFormation Templates](https://github.com/bradpeczka/cfn-foldingathome/workflows/Lint%20CloudFormation%20Templates/badge.svg)
 
 This template creates an AWS spot instance fleet for running the [Folding@Home](https://foldingathome.org/) client.
 Folding@home is a computing platform to assist disease research, for instance to find a cure for the COVID-19 virus.
 The template uses G4-type instances with NVIDIA TESLA GPUs.
 Please only deploy it on accounts where you have the permissions to do so.
 
-The template installs the following software:
+This repository has diverged from upstream and installs the following software:
 
- - Ubuntu 18.04 LTS
+ - Ubuntu 20.04 LTS
  - NVidia CUDA 10.2
- - Folding@home client 7.6.9
+ - The latest, stable Folding@Home Client
 
 Folding@home client is started automatically after instance initialization is complete.
 Client runs until the template is removed, auto scaling group is scaled in or spot instance is reclaimed.
