@@ -146,7 +146,7 @@ Resources:
             PATCH_VERSION=$(curl -sL https://download.foldingathome.org/js/fah-downloads.js | awk -F'(fahclient_|_amd64.deb)' '/debian-stable-64bit/ {print $2;exit}')
             MAJOR_VERSION=$(curl -sL https://download.foldingathome.org/js/fah-downloads.js | awk -F'(/debian-stable-64bit/|/fahclient_)' '/debian-stable-64bit/ {print $2;exit}')
             FAH_URL=https://download.foldingathome.org/releases/public/release/fahclient/debian-stable-64bit/${!MAJOR_VERSION}/fahclient_${!PATCH_VERSION}_amd64.deb
-            wget ${!FAH_URL}&
+            wget -O /tmp/latest.deb ${!FAH_URL}&
             # Install NVidia CUDA drivers and Python
             wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
             mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
